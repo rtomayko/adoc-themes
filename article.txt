@@ -1,0 +1,100 @@
+= Color::Blend
+
+`Color::Blend` is a Ruby library that generates color pallettes consisting of
+mid-tones between two colors. The included `color-blend` program can be used
+to generate pallettes on the command line.
+
+The code was originally developed for use in a charting application
+that required a variable number of graph colors to be generated
+programatically given a base color.
+
+== Installation / Hacking
+
+Using Ruby Gems:
+
+  gem install color-blend --source=http://gem.naeblis.cx
+
+If you're going to hack on it, please use http://bazaar-vcs.org/[bzr]:
+
+  bzr branch http://code.tomayko.com/bzr/color-blend
+
+Or, wade in and http://gem.naeblis.cx/gems/[find yourself a tarball].
+
+[NOTE]
+`Color::Blend` requires Ruby 1.8.4 and 
+http://ruby-pdf.rubyforge.org/color-tools/[color-tools], a Ruby library that 
+provides RGB, CMYK, and other colorspace support.
+
+== Ruby Usage
+
+[ruby,numbered]
+source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+require 'color/blend'
+
+# create a 10 color blend from red to white and write each color
+# to STDOUT.
+blend = Color::Blend.new(:red, :white, 10)
+blend.each { |color| puts color.html }
+
+# Blend objects are Enumerable and can be accessed like arrays. 
+# Grab the color at index 5:
+color = blend[5]
+
+# colors are returned as Color::RGB objects from the color-tools
+# package and can be inspected and manipulated as such:
+red, green, blue = color.r, color.g, color.b  # => 1.0, 0.55, 0.55
+source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The actual pallette generated with the synopsis code looks like this:
+
+++++++++++++++++++++++++++++++++++++++
+sys::[color-blend -e -n 10 --html red]
+++++++++++++++++++++++++++++++++++++++
+
+== Command Line Usage
+
+The `color-blend` program can be used from the command line to generate
+pallettes in a variety of forms:
+
+-------------------------
+$ color-blend --help
+sys::[color-blend --help]
+-------------------------
+
+Generate a 10 color pallette from black to white and write each color to
+STDOUT:
+
+------------------------------------
+$ color-blend -n 10 black white
+sys::[color-blend -n 10 black white]
+------------------------------------
+
+Generate a 5 color pallette from blue to white, exclusively, and output in a
+form suitable for previewing in a browser:
+
+-----------------------------------
+$ color-blend -e --html '#00f'
+sys::[color-blend -e --html '#00f']
+-----------------------------------
+
+The HTML output looks like this when rendered:
+
++++++++++++++++++++++++++++++++++++
+sys::[color-blend -e --html '#00f']
++++++++++++++++++++++++++++++++++++
+
+== Miscellaneous
+
+* link:api/[API Documentation]
+* link:src/[Browse Source]
+
+== License
+
+Copyright (C) 2007 Ryan Tomayko.
+
+Color::Blend is free software; you can redistribute it and/or modify it under the
+terms of the MIT License; see the file link:copying.html[COPYING].
+
+Color::Blend is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.
