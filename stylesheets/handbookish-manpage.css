@@ -19,8 +19,8 @@ h1 {
   line-height:1.666;                     /* 40px */
   margin:1.666em 0;                      /* 40px */
   padding: 0.3333em 0;                   /* 8px */
-  border-bottom:0.08333em solid #999;    /* 2px */
-  border-top:0.08333em solid #999;       /* 2px */
+  border-bottom:0.08333em solid #fff;    /* 2px */
+  border-top:0.08333em solid #fff;       /* 2px */
   text-align:center;
 }
 h2 {
