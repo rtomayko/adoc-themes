@@ -21,4 +21,8 @@ file 'manpage.html' => [ 'manpage.txt' ] + STYLESHEETS do |f|
 end
 CLEAN.include 'manpage.html'
 
-task :default => [ 'article.html', 'manpage.html' ]
+file 'userguide.html' => [ 'userguide.txt' ] + STYLESHEETS do |f|
+  asciidoc f.prerequisites.first
+end
+
+task :default => [ 'article.html', 'manpage.html', 'userguide.html' ]
