@@ -1,0 +1,29 @@
+/* Overrides for manpage documents */
+body { 
+  font-family: 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+  color:#555;
+}
+tt { 
+  font-family: 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+  font-size:1.0769em;
+  font-weight:bold;
+}
+em { 
+  font-style:normal ;
+  color:#222;
+}
+dt { font-weight:bold; color:#000 }
+
+h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+h2 {
+  border-style: none;
+}
+div.sectionbody {
+  margin-left: 5%;
+}
+

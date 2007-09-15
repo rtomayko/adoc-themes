@@ -1,0 +1,65 @@
+body {
+  font-size:87.5%;                /* 1em = 14px */
+  line-height:1.4285;             /* 20px baseline */
+  margin:2.85em;                  /* 40px margins */
+  max-width:51.42857em;           /* 720px max width */
+  font-family: 'Lucida Grande', 'Verdana', 'Helvetica', sans-serif;
+}
+
+em { font-style: italic }
+strong { font-weight: bold }
+tt { color:#007A00 }
+
+h1, h2, h3, h4, h5 { 
+  font-family: Verdana, Helvetica, sans-serif ;
+  color:#900 ;
+}
+
+h1 { 
+  font-size: 2.285em;                 /* 32px */
+  line-height: 1.25;                  /* 40px */
+  border-bottom:0.0625em solid #fff;  /* 2px border */
+  margin:0.5625em 0;                  /* 18px */
+}
+
+h2 { 
+  font-size: 1.714em;                 /* 24px */
+  line-height: 1.666;                 /* 40px */
+  border-bottom:0.0833em solid #fff;  /* 2px border */
+  margin:0.75em 0;                    /* 18px */
+}
+
+pre { 
+  font-size:1.1666em;
+  line-height:1.333;
+}
+
+pre tt { color:#000 }
+
+p, ul, ol { 
+  margin:1.4285em 0;                  /* 20px */
+}
+
+
+.admonitionblock {
+  margin:1.4285em;
+}
+.admonitionblock td.icon {
+  width:2.857em;                     /* 40px */
+  padding-right:1.4285em;
+}
+
+.listingblock .content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.7142em;                /* 10px */
+}
+
+.listingblock .content pre {
+  margin:0
+}
+
+.literalblock .content {
+  margin-left:2.8568em;
+}
+
