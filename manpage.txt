@@ -10,21 +10,21 @@ asciidoc - converts an AsciiDoc text file to DocBook, HTML or LinuxDoc
 
 SYNOPSIS
 --------
-'asciidoc' [OPTIONS] FILE
+`asciidoc` ['OPTIONS'] 'FILE'
 
 
 DESCRIPTION
 -----------
-The asciidoc(1) command translates the AsciiDoc text file 'FILE' to a
+The `asciidoc(1)` command translates the AsciiDoc text file 'FILE' to a
 DocBook, HTML or LinuxDoc file.  If 'FILE' is '-' then the standard
 input is used.
 
 
 OPTIONS
 -------
--a, --attribute=ATTRIBUTE::
+-a, --attribute='ATTRIBUTE'::
         Define or delete document attribute. 'ATTRIBUTE' is formatted
-        like 'NAME=VALUE'. Command-line attributes take precedence
+        like 'NAME'='VALUE'. Command-line attributes take precedence
         over document and configuration file attributes.  Alternate
         acceptable forms are 'NAME' (the 'VALUE' defaults to an empty
         string); 'NAME!' (delete the 'NAME' attribute); 'NAME@' (do
@@ -32,45 +32,45 @@ OPTIONS
         Values containing spaces should be enclosed in double-quote
         characters. Multiple instances allowed.
 
--b, --backend=BACKEND::
-        Backend output file format: 'docbook', 'xhtml11' or 'html4'.
-        Defaults to 'xhtml11'.
+-b, --backend='BACKEND'::
+        Backend output file format: *docbook*, *xhtml11* or *html4*.
+        Defaults to *xhtml11*.
 
--f, --conf-file=CONF_FILE::
+-f, --conf-file='CONF_FILE'::
         Use configuration file 'CONF_FILE'.  Multiple instances
         allowed.  Configuration files processed in command-line order
         (after implicit configuration files).
 
--d, --doctype=DOCTYPE::
-        Document type: 'article', 'manpage' or 'book'. The 'book'
-        document type is only supported by the 'docbook' backend.
-        Default document type is 'article'.
+-d, --doctype='DOCTYPE'::
+        Document type: *article*, *manpage* or *book*. The *book*
+        document type is only supported by the *docbook* backend.
+        Default document type is *article*.
 
 -c, --dump-conf::
         Dump configuration to stdout.
 
--h, --help[=TOPIC]::
-        Print help TOPIC. '--help topics' will print a list of help
+-h, --help[='TOPIC']::
+        Print help 'TOPIC'. `--help topics` will print a list of help
         topics, `--help syntax` summarizes AsciiDoc syntax, `--help
         manpage` prints the AsciiDoc manpage.
 
 -e, --no-conf::
         Exclude implicitly loaded configuration files except for those
-        named like the input file ('infile.conf' and
-        'infile-backend.conf').
+        named like the input file ('infile'`.conf` and
+        'infile'`-backend.conf`).
 
 -s, --no-header-footer::
         Suppress document header and footer output.
 
--o, --out-file=OUT_FILE::
+-o, --out-file='OUT_FILE'::
         Write output to file 'OUT_FILE'. Defaults to the base name of
-        input file with 'backend' extension. If the input is stdin
-        then the outfile defaults to stdout. If 'OUT_FILE' is '-' then
-        the standard output is used.
+        input file with *backend* extension. If the input is stdin
+        then the outfile defaults to `stdout`. If 'OUT_FILE' is *-* then
+        the `stdout` is used.
 
 -n, --section-numbers::
         Auto-number HTML article section titles.
-        Synonym for '-a numbered'.
+        Synonym for `-a` *numbered*.
 
 --unsafe::
         Disable safe mode. Safe mode is enabled by default, disabling
@@ -86,7 +86,7 @@ OPTIONS
 
 BUGS
 ----
-See the AsciiDoc distribution BUGS file.
+See the AsciiDoc distribution `BUGS` file.
 
 
 AUTHOR

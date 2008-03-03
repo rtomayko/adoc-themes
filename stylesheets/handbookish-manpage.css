@@ -1,35 +1,67 @@
 /* Overrides for manpage documents */
-body { 
-  font-family: 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+body {
+  font-family:consolas,'lucida console','bitstream vera sans mono',
+              'courier new', monospace;
   color:#555;
+  max-width:42.307em;
+  text-align:justify;
 }
-tt { 
-  font-family:'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
-  font-weight:bold;
-  font-size:100%;                       /* overrides base stylesheet */
+
+tt,h2 {
+  font-family:consolas,'lucida console','bitstream vera sans mono',
+              'courier new', monospace;
 }
-em { 
+
+
+/* variable / argument */
+em {
+  font-style:italic;
+  font-weight:normal;
+  color:#000;
+  text-decoration:none;
+}
+
+/* concrete command / option name / file */
+tt {
   font-style:normal;
-  color:#222;
+  font-weight:normal;
+  font-weight:bold;
+  color:#000;
 }
-dt { font-weight:bold; color:#000 }
+
+/* concrete value */
+strong {
+  font-style:normal;
+  font-weight:normal;
+  text-decoration:underline;
+  color:#000;
+}
+
+div.sectionbody { margin-left:50px }
+div.sectionbody p:first-child { margin-top:0 }
+
+dl { margin-left:0px }
+dt {
+  font-weight:bold;
+  color:#000;
+}
+dd p:first-child { margin-top:0 }
 
 h1 {
-  font-size:1.714em;                     /* 24px */
-  line-height:1.666;                     /* 40px */
-  margin:1.666em 0;                      /* 40px */
-  padding: 0.3333em 0;                   /* 8px */
-  border-bottom:0.08333em solid #fff;    /* 2px */
-  border-top:0.08333em solid #fff;       /* 2px */
+  text-transform:uppercase;
+  font-size:22px;
+  line-height:1.25;
   text-align:center;
 }
+
 h2 {
-  font-size:1.142em;                     /* 16px */
+  font-size:16px;
   line-height:1.25;                      /* 20px baseline */
-  margin:1.25em 0;                       /* 20px */
-  border-bottom:0;                       
-  border-top:0;
+  margin:20px 0 0 0;
 }
-div.sectionbody {
-  margin-left: 5%;
+
+#footer {
+  font-family:verdana,helvetica,sans-serif;
 }
+
+/* vim: set ts=2 sw=2 expandtab: */

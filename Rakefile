@@ -11,18 +11,19 @@ def asciidoc(*args)
     *args
 end
 
-file 'article.html' => [ 'article.txt' ] + STYLESHEETS do |f|
+file 'article.html' => [ 'article.txt', 'xhtml11-article.conf' ] + STYLESHEETS do |f|
   asciidoc f.prerequisites.first
 end
 CLEAN.include 'article.html'
 
-file 'manpage.html' => [ 'manpage.txt' ] + STYLESHEETS do |f|
-  asciidoc '-d', 'manpage', f.prerequisites.first
-end
-CLEAN.include 'manpage.html'
-
 file 'userguide.html' => [ 'userguide.txt' ] + STYLESHEETS do |f|
   asciidoc f.prerequisites.first
 end
+CLEAN.include 'userguide.html'
+
+file 'manpage.html' => [ 'manpage.txt', 'xhtml11-manpage.conf' ] + STYLESHEETS do |f|
+  asciidoc '-d', 'manpage', f.prerequisites.first
+end
+CLEAN.include 'manpage.html'
 
 task :default => [ 'article.html', 'manpage.html', 'userguide.html' ]

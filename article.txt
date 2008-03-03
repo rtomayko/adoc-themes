@@ -1,100 +1,34 @@
-= Color::Blend
+AsciiDoc README File
+====================
 
-`Color::Blend` is a Ruby library that generates color pallettes consisting of
-mid-tones between two colors. The included `color-blend` program can be used
-to generate pallettes on the command line.
+Prerequisites
+-------------
+AsciiDoc is written in Python so you need a Python interpreter
+(version 2.3 or later) to execute asciidoc(1). Python is installed by
+default in most Linux distributions.  You can download Python from the
+official Python website http://www.python.org[].
 
-The code was originally developed for use in a charting application
-that required a variable number of graph colors to be generated
-programatically given a base color.
 
-== Installation / Hacking
+Obtaining AsciiDoc
+------------------
+The latest AsciiDoc version and online documentation can be found at
+http://www.methods.co.nz/asciidoc/[] and at the SourceForge
+http://sourceforge.net/projects/asciidoc/[].
 
-Using Ruby Gems:
 
-  gem install color-blend --source=http://gem.naeblis.cx
+Tools
+-----
+Current AsciiDoc version tested on Xubuntu Linux 7.04 with:
 
-If you're going to hack on it, please use http://bazaar-vcs.org/[bzr]:
+- Python 2.5.1
+- DocBook XSL Stylesheets 1.72.0 (with AsciiDoc drivers and patches).
+- xsltproc (libxml 20627, libxslt 10120 and libexslt 813).
+- FOP 0.20.5.
+- GNU source-highlight 2.4.
 
-  bzr branch http://code.tomayko.com/bzr/color-blend
 
-Or, wade in and http://gem.naeblis.cx/gems/[find yourself a tarball].
+COPYING
+-------
+Copyright (C) 2002-2007 Stuart Rackham. Free use of this software
+is granted under the terms of the GNU General Public License (GPL).
 
-[NOTE]
-`Color::Blend` requires Ruby 1.8.4 and 
-http://ruby-pdf.rubyforge.org/color-tools/[color-tools], a Ruby library that 
-provides RGB, CMYK, and other colorspace support.
-
-== Ruby Usage
-
-[ruby,numbered]
-source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-require 'color/blend'
-
-# create a 10 color blend from red to white and write each color
-# to STDOUT.
-blend = Color::Blend.new(:red, :white, 10)
-blend.each { |color| puts color.html }
-
-# Blend objects are Enumerable and can be accessed like arrays. 
-# Grab the color at index 5:
-color = blend[5]
-
-# colors are returned as Color::RGB objects from the color-tools
-# package and can be inspected and manipulated as such:
-red, green, blue = color.r, color.g, color.b  # => 1.0, 0.55, 0.55
-source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The actual pallette generated with the synopsis code looks like this:
-
-++++++++++++++++++++++++++++++++++++++
-sys::[color-blend -e -n 10 --html red]
-++++++++++++++++++++++++++++++++++++++
-
-== Command Line Usage
-
-The `color-blend` program can be used from the command line to generate
-pallettes in a variety of forms:
-
--------------------------
-$ color-blend --help
-sys::[color-blend --help]
--------------------------
-
-Generate a 10 color pallette from black to white and write each color to
-STDOUT:
-
-------------------------------------
-$ color-blend -n 10 black white
-sys::[color-blend -n 10 black white]
-------------------------------------
-
-Generate a 5 color pallette from blue to white, exclusively, and output in a
-form suitable for previewing in a browser:
-
------------------------------------
-$ color-blend -e --html '#00f'
-sys::[color-blend -e --html '#00f']
------------------------------------
-
-The HTML output looks like this when rendered:
-
-+++++++++++++++++++++++++++++++++++
-sys::[color-blend -e --html '#00f']
-+++++++++++++++++++++++++++++++++++
-
-== Miscellaneous
-
-* link:api/[API Documentation]
-* link:src/[Browse Source]
-
-== License
-
-Copyright (C) 2007 Ryan Tomayko.
-
-Color::Blend is free software; you can redistribute it and/or modify it under the
-terms of the MIT License; see the file link:copying.html[COPYING].
-
-Color::Blend is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-A PARTICULAR PURPOSE.
