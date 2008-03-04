@@ -1,0 +1,100 @@
+Hacking on AsciiDoc Themes
+==========================
+Ryan Tomayko <r@tomayko.com>
+
+There's not a whole lot of information here just yet but it should fill in
+shortly.
+
+The project is kept in Git:
+
+-----------------------------------------------------
+$ git clone git://github.com/rtomayko/adoc-themes.git
+-----------------------------------------------------
+
+There's a http://github.com/rtomayko/adoc-themes/tree/master[Project Page] on
+GitHub. You can pull a tarball of the master branch from there if you're not
+into git and want to take a look.
+
+You need `asciidoc(1)`, obviously. There's a package or port for just about any
+platform you can imagine.
+
+Windows people... Sorry, I have absolutely no clue what's going on over there.
+You're on your own.
+
+You need Ruby 1.8 and Rake. I tried to use GNU Make for this, I really did, but
+`rake` has some extremely powerful file generation / dependency tracking
+abilities that come in really handy here. (Read the `Rakefile` under 'Theme CSS
+Generation' if you don't believe me. It's building file targets and dependencies
+dynamically based on `@import` rules found in the CSS files. If you can do that
+in `gmake`, I'd like to see it.)
+
+Actually, screw it, we need to take a look at that code right now so you
+understand what I'm talking about:
+
+[ruby]
+source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FileList['src/*.css'].each do |srcfile|
+  basename = File.basename(srcfile)
+  destfile = "stylesheets/#{basename}"
+  prereqs = (File.read(srcfile, 1024) || '').
+              split("\n").
+              grep(/@import/).
+              map { |line| line.match(/@import\s+url\((.*)\)\s*;/)[1] }.
+              map { |file| "stylesheets/#{file}" }
+  file destfile => [srcfile, *prereqs] do |f|
+    doing :css, f.name
+    src = File.read(srcfile)
+    src.gsub!(/@import\s+url\((.*)\)\s*;/) do |match|
+      [
+        "/* BEG #{match} */",
+        File.read("stylesheets/#{$1}"),
+        "/* END #{match} */"
+      ].join("\n")
+    end
+    mkdir_p 'stylesheets'
+    File.open(destfile, 'wb') { |io| io.write(src) }
+    # set modified time to the oldest of all prerequisites
+    mtime = f.prerequisites.map { |fn| File.mtime(fn) }.max
+    File.utime(Time.now, mtime, destfile)
+  end
+  CLOBBER.include destfile
+  task 'stylesheets' => destfile
+end
+source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+'Huzah!' That's more or less an `@import` pre-processor that's smart about
+dependencies.
+
+We build standalone "full" versions of each theme `.css` file under the
+`stylesheets` directory. If you just want stylesheets for use with
+`asciidoc(1)`, you should be able to simply run:
+
+------------------
+$ rake stylesheets
+------------------
+
+You'll have your asciidoc-ready stylesheets under `stylesheets`. Using them
+should be as simple as:
+
+----------------------------------------------------------
+$ asciidoc -a stylesdir=/path/to/adoc-themes/stylesheets \
+           -a theme=THEMENAME \
+           your-asciidoc-source.txt
+----------------------------------------------------------
+
+Soon, there will be tarballs with just the finished theme CSS for easy
+installation and use with AsciiDoc. But not yet.
+
+A clean source tree has all the theme CSS under `src` and the example asciidoc
+text files under `examples`. Running `rake examples` will generate an `.html`
+file for each theme/example combination.
+
+If you want to add a theme, take a look at one of the existing theme sources
+under `src`, like `handbookish.css`, and then copy it to a new file under `src`
+and modify it. You will generally want to `@import url(bare.css)` and then
+offset those styles with your customizations. Run `rake examples` and you should
+see that its building example `.html` files for your new theme.
+
+That's it. Add and commit your stuff and let me know where I can pull from.
+
+// vim: ft=asciidoc

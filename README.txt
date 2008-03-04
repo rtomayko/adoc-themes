@@ -4,7 +4,7 @@ Ryan Tomayko <r@tomayko.com>
 v1, March 2008
 
 *AsciiDoc* is a (_mostly_ humane) text document format for writing short
-documents, articles, books and man pages. It includes a toolchain capable of
+documents, articles, books and man pages. Its toolchain is capable of
 producing HTML4, XHTML, DocBook, man, and LaTeX. This file (link:README.txt[])
 is AsciiDoc . `git(1)`'s manual pages and other documentation is written in AsciiDoc.
 

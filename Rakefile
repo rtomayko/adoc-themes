@@ -147,6 +147,15 @@ end
 task 'doc' => 'README.html'
 CLOBBER.include 'README.html'
 
+file 'HACKING.html' => %w[HACKING stylesheets examples] do |f|
+  asciidoc 'HACKING', f.name,
+    :stylesdir => 'stylesheets',
+    :theme => 'bare',
+    :linkcss => '!'
+end
+task 'doc' => 'HACKING.html'
+CLOBBER.include 'HACKING.html'
+
 # ---------------------------------------------------------------------------
 # Misc Environment Configuration and Helpers
 # ---------------------------------------------------------------------------
