@@ -7,7 +7,7 @@ THEMES =  FileList['src/*.css'].
 
 task 'default' => 'all'
 
-task 'all' => [ 'stylesheets', 'examples' ]
+task 'all' => [ 'stylesheets', 'examples', 'doc' ]
 
 desc 'Build all examples'
 task 'examples'
