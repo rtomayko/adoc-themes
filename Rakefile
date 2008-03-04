@@ -61,9 +61,10 @@ EX_SRCS = EX_MAN_SRCS + EX_ART_SRCS
 EX_CONF = FileList['examples/*.conf']
 EX_HTML = EX_SRCS.map { |f| f.sub(/\.txt/, '.html') }
 
-file 'examples/README.txt' => 'README.txt' do |f|
+file 'examples/README.txt' => %w[README.txt Rakefile] do |f|
   text = File.read('README.txt')
   text.gsub! /link:\.\/examples/, 'link:.'
+  text.gsub! /link:\.\/src/, 'link:../src'
   File.open(f.name, 'wb') { |io| io.write(text) }
 end
 
@@ -155,6 +156,17 @@ file 'HACKING.html' => %w[HACKING stylesheets examples] do |f|
 end
 task 'doc' => 'HACKING.html'
 CLOBBER.include 'HACKING.html'
+
+# ---------------------------------------------------------------------------
+# Shipping it out
+# ---------------------------------------------------------------------------
+
+task 'publish' => 'doc' do |t|
+  sh <<-EOF
+    rsync -aP --exclude=.git ./ tomayko.com:/src/adoc-themes &&
+    ssh tomayko.com 'cd /src/adoc-themes && ln -sf README.html index.html'
+  EOF
+end
 
 # ---------------------------------------------------------------------------
 # Misc Environment Configuration and Helpers

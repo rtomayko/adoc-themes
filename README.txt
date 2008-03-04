@@ -14,7 +14,7 @@ is functional but is somewhat lacking in typographic consistencies; it is also
 quite _blue_.
 
 This package includes a variety of additional themes and a framework for
-assembling them.
+assembling them. See: link:HACKING.html[HACKING].
 
 [CAUTION]
 .CAUTION

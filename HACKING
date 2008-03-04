@@ -23,15 +23,16 @@ You're on your own.
 
 You need Ruby 1.8 and Rake. I tried to use GNU Make for this, I really did, but
 `rake` has some extremely powerful file generation / dependency tracking
-abilities that come in really handy here. (Read the `Rakefile` under 'Theme CSS
-Generation' if you don't believe me. It's building file targets and dependencies
-dynamically based on `@import` rules found in the CSS files. If you can do that
-in `gmake`, I'd like to see it.)
+abilities that come in really handy here. (Read the
+http://tinyurl.com/yst82j[Rakefile] under 'Theme CSS Generation' if you don't
+believe me. It's building file targets and dependencies dynamically based on
+`@import` rules found in the CSS files. If you can do that in `gmake`, I'd like
+to see it.)
 
 Actually, screw it, we need to take a look at that code right now so you
 understand what I'm talking about:
 
-[ruby]
+[ruby,numbered]
 source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 FileList['src/*.css'].each do |srcfile|
   basename = File.basename(srcfile)
