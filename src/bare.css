@@ -90,6 +90,10 @@ h5 {
 	margin-bottom:0;
 }
 
+.admonitionblock .title {
+	font-weight:bold;
+}
+
 .admonitionblock {
 	margin:30px 0px;
 	color:#555;
