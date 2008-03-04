@@ -1,40 +1,50 @@
 require 'rake/clean'
 
-THEMES =  %w[bare freebsdish]
+THEMES =  FileList['src/*.css'].
+            reject { |f| f =~ /-(manpage|quirks)\.css/ }.
+            map { |f| File.basename(f).sub(/\.css$/, '') }.
+            uniq
 
-task 'default' => [ 'css', 'examples' ]
+task 'default' => 'all'
+
+task 'all' => [ 'stylesheets', 'examples' ]
 
 desc 'Build all examples'
 task 'examples'
 
 desc 'Build CSS for all themes'
-task 'css'
+task 'stylesheets'
 
 # ---------------------------------------------------------------------------
 # Theme CSS Generation
 # ---------------------------------------------------------------------------
 
-(THEMES - ['bare']).each do |theme|
-  file "#{theme}.css" => [ "#{theme}.css.in", "bare.css" ] do |f|
+FileList['src/*.css'].each do |srcfile|
+  basename = File.basename(srcfile)
+  destfile = "stylesheets/#{basename}"
+  prereqs = (File.read(srcfile, 1024) || '').
+              split("\n").
+              grep(/@import/).
+              map { |line| line.match(/@import\s+url\((.*)\)\s*;/)[1] }.
+              map { |file| "stylesheets/#{file}" }
+  file destfile => [srcfile, *prereqs] do |f|
     doing :css, f.name
-    sh "cat bare.css #{f.name}.in > #{f.name}"
+    src = File.read(srcfile)
+    src.gsub!(/@import\s+url\((.*)\)\s*;/) do |match|
+      [ 
+        "/* BEG #{match} */",
+        File.read("stylesheets/#{$1}"),
+        "/* END #{match} */"
+      ].join("\n")
+    end
+    mkdir_p 'stylesheets'
+    File.open(destfile, 'wb') { |io| io.write(src) }
+    # set modified time to the oldest of all prerequisites
+    mtime = f.prerequisites.map { |fn| File.mtime(fn) }.max
+    File.utime(Time.now, mtime, destfile)
   end
-  file "#{theme}-manpage.css" => [ "#{theme}-manpage.css.in", 'bare-manpage.css' ] do |f|
-    doing :css, f.name
-    sh "cat bare-manpage.css #{f.name}.in > #{f.name}"
-  end
-  file "#{theme}-quirks.css" => [ "#{theme}-quirks.css.in", 'bare-quirks.css' ] do |f|
-    doing :css, f.name
-    sh "cat bare-quirks.css #{f.name}.in > #{f.name}"
-  end
-  CLOBBER.include "#{theme}{,-manpage,-quirks}.css"
-  desc "Build CSS for #{theme} only"
-  task "css:#{theme}" => [
-    "#{theme}.css",
-    "#{theme}-manpage.css",
-    "#{theme}-quirks.css"
-  ]
-  task 'css' => "css:#{theme}"
+  CLOBBER.include destfile
+  task 'stylesheets' => destfile
 end
 
 # ---------------------------------------------------------------------------
@@ -54,8 +64,7 @@ EX_ART_SRCS.each do |srcfile|
       srcfile, 
       'examples/xhtml11-article.conf', 
       'examples/asciidoc.conf',
-      "#{theme}.css",
-      "#{theme}-quirks.css"
+      "src/#{theme}.css"
     ]
     destfile = srcfile.
       sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
@@ -73,9 +82,8 @@ EX_MAN_SRCS.each do |srcfile|
       srcfile, 
       'examples/xhtml11-manpage.conf', 
       'examples/asciidoc.conf',
-      "#{theme}.css",
-      "#{theme}-quirks.css",
-      "#{theme}-manpage.css"
+      "src/#{theme}.css",
+      "src/#{theme}-manpage.css"
     ]
     destfile = srcfile.
       sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
@@ -124,8 +132,9 @@ def asciidoc(src, target, *args)
     else
       {}
     end
+  attributes = { :linkcss => '' }.merge(attributes)
   doing :doc, target
-  args = %W[asciidoc --unsafe -o #{target} -a stylesdir=#{Dir.pwd}] +
+  args = %W[asciidoc --unsafe -o #{target} -a stylesdir=../src] +
          args +
          attributes.map { |k,v| ["-a", "#{k}=#{v}"] }.flatten +
          [ (verbose ? '--verbose' : nil), src].compact
