@@ -1,0 +1,43 @@
+body {
+  font-family:verdana,helvetica,arial,sans-serif;
+  font-size:100%;
+  color:#000;
+}
+
+tt { color:#007A00 }
+pre tt { color:#000 }
+
+dt { color:#000 }
+
+h1, h2, h3, h4, h5 {
+  font-family:'lucida grande',helvetica,verdana,sans-serif;
+  color:#900;
+  font-weight:bold;
+}
+
+#header {
+  text-align:left;
+}
+#header h1 { margin-bottom:40px }
+
+h1 {
+  font-size:36px;
+  line-height:1;
+  margin:40px 0;
+}
+
+h2 {
+  font-size:28px;
+  line-height:1;
+  margin:30px 0 20px 0;
+}
+
+.sectionbody {
+  margin-left:30px;
+}
+
+pre {
+  background:#EEE;
+}
+
+/* vim: set ft=css ts=4 sw=4 noexpandtab: */

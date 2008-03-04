@@ -1,18 +1,28 @@
-/* bare-manpage.css */
+/* ---------------------------------------------------------------------------
+   Bare AsciiDoc Styles (Manpage Overlay)
+   Ryan Tomayko <r@tomayko.com>
+--------------------------------------------------------------------------- */
 
 body {
-  font-family:consolas,'lucida console','bitstream vera sans mono',
-              'courier new', monospace;
-  color:#555;
-  max-width:42.307em;
+  max-width:44em;
+  margin:40px 20px;
+  color:#444;
   text-align:justify;
 }
 
-tt,h2 {
-  font-family:consolas,'lucida console','bitstream vera sans mono',
-              'courier new', monospace;
+body,h2,tt {
+	font-family:consolas,'lucida console','bitstream vera sans mono',
+               'courier new', monospace;
 }
 
+#header {
+	text-align:left;
+	margin-bottom:auto;
+}
+
+h1, h2 {
+	font-weight:bold;
+}
 
 /* variable / argument */
 em {
@@ -39,14 +49,22 @@ strong {
 }
 
 div.sectionbody { margin-left:50px }
-div.sectionbody p:first-child { margin-top:0 }
+div.sectionbody p:first-child,
+div.sectionbody dl:first-child
+{ margin-top:0 }
 
-dl { margin-left:0px }
-dt {
-  font-weight:bold;
-  color:#000;
+dl {
+	margin-left:0px;
 }
-dd p:first-child { margin-top:0 }
+
+dt {
+	font-weight:bold;
+	color:#000;
+}
+
+dd p:first-child {
+	margin-top:0;
+}
 
 h1 {
   text-transform:uppercase;
@@ -65,4 +83,4 @@ h2 {
   font-family:verdana,helvetica,sans-serif;
 }
 
-/* vim: set ts=2 sw=2 expandtab: */
+/* vim: set ts=4 sw=4 noexpandtab: */

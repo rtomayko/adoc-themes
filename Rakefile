@@ -1,59 +1,45 @@
 require 'rake/clean'
 
 THEMES =  %w[bare freebsdish]
-CSS = THEMES.
-        map{|t| ["#{t}.css","#{t}-manpage.css","#{t}-quirks.css"]}.
-        flatten
 
-# disable verbose output by default. Invoke like this to turn on:
-# $ rake V=1 task ...
-# ... or ...
-# $ rake verbose task ... 
-task(:verbose) { verbose(true) }
-verbose(ENV['V'] == '1')
+task 'default' => [ 'css', 'examples' ]
 
-# give a status of what's going on (only when not in verbose mode)
-def doing(what, message=nil)
-  unless verbose
-    message = [ "  #{what.to_s.upcase}", message ].compact.join(' ')
-    STDERR.puts message
-  end
-end
+desc 'Build all examples'
+task 'examples'
 
-# Run asciidoc with some default options and attributes.
-def asciidoc(src, target, *args)
-  attributes = 
-    if args.last.is_a?(Hash)
-      args.pop
-    else
-      {}
-    end
-  doing :doc, target
-  args = %W[asciidoc --unsafe -o #{target} -a stylesdir=#{Dir.pwd}] +
-         attributes.map { |k,v| ["-a", "#{k}=#{v}"] }.flatten +
-         [ (verbose ? '--verbose' : nil), src].compact
-  sh(*args)
-end
+desc 'Build CSS for all themes'
+task 'css'
+
+# ---------------------------------------------------------------------------
+# Theme CSS Generation
+# ---------------------------------------------------------------------------
 
 (THEMES - ['bare']).each do |theme|
-  file "#{theme}.css" => "#{theme}.css.in" do |f|
+  file "#{theme}.css" => [ "#{theme}.css.in", "bare.css" ] do |f|
     doing :css, f.name
     sh "cat bare.css #{f.name}.in > #{f.name}"
   end
-  file "#{theme}-manpage.css" => "#{theme}-manpage.css.in" do |f|
+  file "#{theme}-manpage.css" => [ "#{theme}-manpage.css.in", 'bare-manpage.css' ] do |f|
     doing :css, f.name
     sh "cat bare-manpage.css #{f.name}.in > #{f.name}"
   end
-  file "#{theme}-quirks.css" => "#{theme}-quirks.css.in" do |f|
+  file "#{theme}-quirks.css" => [ "#{theme}-quirks.css.in", 'bare-quirks.css' ] do |f|
     doing :css, f.name
     sh "cat bare-quirks.css #{f.name}.in > #{f.name}"
   end
-  CLEAN.include "#{theme}{,-manpage,-quirks}.css"
-  desc "Build #{theme} stylesheets"
-  task theme => [ "#{theme}.css", "#{theme}-manpage.css", "#{theme}-quirks.css" ]
+  CLOBBER.include "#{theme}{,-manpage,-quirks}.css"
+  desc "Build CSS for #{theme} only"
+  task "css:#{theme}" => [
+    "#{theme}.css",
+    "#{theme}-manpage.css",
+    "#{theme}-quirks.css"
+  ]
+  task 'css' => "css:#{theme}"
 end
 
-# Examples ==================================================================
+# ---------------------------------------------------------------------------
+# Examples
+# ---------------------------------------------------------------------------
 
 EX_MAN_SRCS = FileList['examples/*.1.txt']
 EX_ART_SRCS = FileList['examples/*.txt'].reject { |f| f =~ /\.1\.txt$/ }
@@ -71,7 +57,8 @@ EX_ART_SRCS.each do |srcfile|
       "#{theme}.css",
       "#{theme}-quirks.css"
     ]
-    destfile = srcfile.sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
+    destfile = srcfile.
+      sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
     file destfile => prereqs do
       asciidoc srcfile, destfile, :theme => theme
     end
@@ -90,7 +77,8 @@ EX_MAN_SRCS.each do |srcfile|
       "#{theme}-quirks.css",
       "#{theme}-manpage.css"
     ]
-    destfile = srcfile.sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
+    destfile = srcfile.
+      sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
     file destfile => prereqs do
       asciidoc srcfile, destfile, '-d', 'manpage', :theme => theme
     end
@@ -105,12 +93,47 @@ THEMES.each do |theme|
   task 'examples' => "examples:#{theme}"
 end
 
-desc 'Build all examples'
-task 'examples'
 
-task :clean_doing do
-  doing :clean, "#{CLEAN.length} file(s)"
+# ---------------------------------------------------------------------------
+# Misc Environment Configuration and Helpers
+# ---------------------------------------------------------------------------
+
+# Disable verbose output by default. Invoke like this to turn on:
+# $ rake V=1 task ...
+# ... or ...
+# $ rake verbose task ... 
+task('verbose') { verbose(true) }
+verbose(ENV['V'] == '1')
+
+# Give a status of what's going on (only when not in verbose mode). The 
+# message looks like:
+# 
+#   WHAT message ...
+def doing(what, message=nil)
+  unless verbose
+    message = [ "  #{what.to_s.upcase}", message ].compact.join(' ')
+    STDERR.puts message
+  end
 end
+
+# Run asciidoc with some default options and attributes.
+def asciidoc(src, target, *args)
+  attributes = 
+    if args.last.is_a?(Hash)
+      args.pop
+    else
+      {}
+    end
+  doing :doc, target
+  args = %W[asciidoc --unsafe -o #{target} -a stylesdir=#{Dir.pwd}] +
+         args +
+         attributes.map { |k,v| ["-a", "#{k}=#{v}"] }.flatten +
+         [ (verbose ? '--verbose' : nil), src].compact
+  sh(*args)
+end
+
+task(:clean_doing) { doing(:clean, "#{CLEAN.length} file(s)") }
 task :clean => :clean_doing
 
-task :default => :examples
+task(:clobber_doing) { doing(:clobber, "#{CLOBBER.length} file(s)") }
+task :clobber => :clobber_doing

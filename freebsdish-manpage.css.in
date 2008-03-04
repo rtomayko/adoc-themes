@@ -1,0 +1,42 @@
+/* ---------------------------------------------------------------------------
+   FreeBSD Manpage AsciiDoc Styles
+   Ryan Tomayko <r@tomayko.com>
+
+   Based on HTML manpage styles available at freebsd.org:
+   http://www.freebsd.org/cgi/man.cgi
+--------------------------------------------------------------------------- */
+
+/* #960 */
+
+body {
+  font-size:81.25%;
+  color:#000;
+}
+
+h2 {
+  color:#960;
+  font-size:100%;
+}
+
+/* variable / argument */
+em {
+  color:#007A00;
+  text-decoration:none;
+}
+
+/* concrete command / option name / file */
+tt {
+  color:#960;
+}
+
+
+dt {
+  color:#960;
+}
+
+/* concrete value */
+strong {
+  color:#000;
+  text-decoration:none;
+  font-style:italic;
+}
