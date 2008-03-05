@@ -9,7 +9,7 @@ body {
 	margin:40px 50px;
 	max-width:53.8461538462em; /* 790px */
 	font-family:verdana,helvetica,arial,sans-serif;
-	color:#222;
+	color:#333;
 }
 
 em {
@@ -18,11 +18,13 @@ em {
 
 strong {
 	font-weight:bold;
+	color:#000;
 }
 
 tt {
 	font-family:consolas, 'lucida console', 'bitstream vera sans mono',
 	           'courier new', monospace;
+	color:#000;
 }
 
 p, ul, ol, dl {
@@ -76,11 +78,15 @@ h5 {
 	line-height:1.538;
 }
 
+pre {
+	font-size:larger;
+}
 
 #header { 
 	text-align:center;
 	margin-bottom:30px;
 }
+
 #header h1 { margin-bottom:0 }
 
 
