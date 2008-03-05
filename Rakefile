@@ -1,5 +1,8 @@
 require 'rake/clean'
 
+VERS =    File.read('README.txt', 1024).
+            match(/^v(\d+),/)[1]
+
 THEMES =  FileList['src/*.css'].
             reject { |f| f =~ /-(manpage|quirks)\.css/ }.
             map { |f| File.basename(f).sub(/\.css$/, '') }.
@@ -17,6 +20,9 @@ task 'stylesheets'
 
 desc 'Build documentation website'
 task 'doc'
+
+desc 'Build distributable tarball under dist'
+task 'dist'
 
 # ---------------------------------------------------------------------------
 # Theme CSS Generation
@@ -65,6 +71,7 @@ file 'examples/README.txt' => %w[README.txt Rakefile] do |f|
   text = File.read('README.txt')
   text.gsub! /link:\.\/examples/, 'link:.'
   text.gsub! /link:\.\/src/, 'link:../src'
+  text.gsub! /link:HACKING/, 'link:../HACKING'
   File.open(f.name, 'wb') { |io| io.write(text) }
 end
 
@@ -161,12 +168,51 @@ CLOBBER.include 'HACKING.html'
 # Shipping it out
 # ---------------------------------------------------------------------------
 
-task 'publish' => 'doc' do |t|
+# Push website up to tomayko.com
+task 'publish' => %w[doc] do |t|
+  doing :pub, "tomayko.com"
   sh <<-EOF
-    rsync -aP --exclude=.git ./ tomayko.com:/src/adoc-themes &&
+    rsync -av -f'- .git' -f'- *.sw?' -f'- /dist' --delete --delete-excluded \
+          ./ tomayko.com:/src/adoc-themes &&
     ssh tomayko.com 'cd /src/adoc-themes && ln -sf README.html index.html'
   EOF
 end
+
+TARNAME = "adoc-themes-0.#{VERS}"
+
+# Build tarball under dist.
+file "dist/#{TARNAME}.tar.gz" => %w[stylesheets examples doc] do |f|
+  content = FileList['src/*.css','stylesheets/*.css']
+  content.include 'examples/*.{conf,html,txt}'
+  content.include 'images/icons/***'
+  content.include 'README.txt', 'HACKING', 'Rakefile', 'asciidoc.conf',
+    'xhtml11-article.conf'
+  doing :tar, f.name
+  rm_rf "#{TARNAME}"
+  mkdir "#{TARNAME}"
+  content.each do |file|
+    if File.directory?(file)
+      mkdir_p file
+    else
+      mkdir_p "#{TARNAME}/#{File.dirname(file)}"
+      ln file, "#{TARNAME}/#{file}"
+    end
+  end
+  mkdir_p 'dist'
+  rm_f f.name
+  sh "tar", "czf", f.name, TARNAME
+  rm_rf TARNAME
+end
+task 'dist' => "dist/#{TARNAME}.tar.gz"
+
+# Push tarball up to dist site.
+task 'release' => %w[dist] do |t|
+  sh <<-EOF
+    rsync -av dist/ tomayko.com:/dist/adoc-themes &&
+    ssh tomayko.com 'cd /src/adoc-themes && ln -sf README.html index.html'
+  EOF
+end
+
 
 # ---------------------------------------------------------------------------
 # Misc Environment Configuration and Helpers
