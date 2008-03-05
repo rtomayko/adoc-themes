@@ -1,0 +1,10 @@
+Handbookish
+===========
+Ryan Tomayko <r@tomayko.com>
+2008-03-05
+
+Inspired by http://freebsd.org/doc/en/books/handbook/[The FreeBSD Handbook],
+one of The FreeBSD Documentation Project's many works of art, this theme is
+probably most noticeable by its judicious use of _daemon red_ and its fatty
+bold headings. FreeBSD's http://tinyurl.com/3afcwv[`sh(1)`] HTML manpage
+provided the template for the manpage stylings.

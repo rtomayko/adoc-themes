@@ -1,0 +1,55 @@
+= <%= theme.title %> =
+:Author: <%= theme.author_name %>
+:Email: <%= theme.author_email %>
+:Date: <%= theme.date_of_inclusion.strftime('%B %d, %Y') %>
+
+== Overview ==
+
+<%= theme.description %>
+
+link:<%= theme.name %>-format.html[Article Sample] |
+link:<%= theme.name %>-manpage.html[Manpage Sample] |
+link:src/<%= theme.name %>.css[<%= theme.name %>.css] |
+link:src/<%= theme.name %>-manpage.css[<%= theme.name %>-manpage.css]
+
+Usage
+-----
+
+Using the <%= theme.name %> theme for articles:
+
+    $ asciidoc -a theme=<%= theme.name %> -o document.html document.txt
+
+Using the <%= theme.name %> theme for manpages:
+
+    $ asciidoc -a theme=<%= theme.name %> -d manpage -o program.1.html program.1.txt
+
+
+Files
+-----
+
+=== `<%=theme.name%>.css` ===
+
+
+[css]
+source~~~~
+<%= File.read("src/#{theme.name}.css") %>
+source~~~~
+
+=== `<%=theme.name%>-manpage.css` ===
+
+[css]
+source~~~~
+<%= File.read("src/#{theme.name}-manpage.css") %>
+source~~~~
+
+More Themes
+-----------
+
+<% theme.other_themes.each do |t| %>
+* link:<%= t.name %>.html[<%= t.title %>]
+<% end %>
+
+About AsciiDoc Themes
+---------------------
+
+...

@@ -1,0 +1,40 @@
+AsciiDoc Themes
+===============
+Ryan Tomayko <r@tomayko.com>
+March 2008
+
+*AsciiDoc* is a (_mostly_ humane) text document format for writing short
+documents, articles, books and man pages. Its toolchain is capable of
+producing HTML4, XHTML, DocBook, man, and LaTeX. This page (link:index.txt[`index.txt`])
+was originally written in _AsciiDoc_. `git(1)`'s manual pages and other documentation
+are written in _AsciiDoc_.
+
+_AsciiDoc_ generates basically good semantic markup, is styled with external
+CSS, and includes support for themeing. The default theme included in AsciiDoc
+is functional but is somewhat lacking in typographic consistencies; it is also
+quite _blue_.
+
+This package includes a variety of additional themes and a framework for
+assembling them (see also: link:hacking.html[`HACKING`]).
+
+[CAUTION]
+.CAUTION
+This project was started on March 4, 2008 and is currently in the very early
+stages of development. There's not many themes yet and not all themes style the
+gambit of supported AsciiDoc markup. Also, I have not tested anything in any
+version of Internet Explorer, yet.
+
+Themes
+------
+
+<% Theme.each do |t| %>
+=== <%= t.title %> ===
+
+<%= t.description %>
+
+link:<%= t.name %>.html[Theme Information] |
+link:<%= t.name %>-format.html[Article Sample] |
+link:<%= t.name %>-manpage.html[Manpage Sample] |
+link:src/<%= t.name %>.css[<%= t.name %>.css] |
+link:src/<%= t.name %>-manpage.css[<%= t.name %>-manpage.css]
+<% end %>

@@ -1,25 +1,20 @@
+$LOAD_PATH.unshift 'lib'
 require 'rake/clean'
+require 'theme'
 
-VERS =    File.read('README.txt', 1024).
-            match(/^v(\d+),/)[1]
+include FileTest
 
-THEMES =  FileList['src/*.css'].
-            reject { |f| f =~ /-(manpage|quirks)\.css/ }.
-            map { |f| File.basename(f).sub(/\.css$/, '') }.
-            uniq
+VERS =    File.read('VERSION')
 
 task 'default' => 'all'
 
-task 'all' => [ 'stylesheets', 'examples', 'doc' ]
+task 'all' => [ 'stylesheets', 'site' ]
 
-desc 'Build all examples'
-task 'examples'
+desc 'Build all examples and test files under site'
+task 'site'
 
 desc 'Build CSS for all themes'
 task 'stylesheets'
-
-desc 'Build documentation website'
-task 'doc'
 
 desc 'Build distributable tarball under dist'
 task 'dist'
@@ -60,82 +55,144 @@ end
 # Examples
 # ---------------------------------------------------------------------------
 
-EX_MAN_SRCS = %w[examples/asciidoc.1.txt]
-EX_ART_SRCS = %w[examples/userguide.txt examples/README.txt]
-EX_SRCS = EX_MAN_SRCS + EX_ART_SRCS
+require 'erb'
+THEME_TEMPLATE = ERB.new(File.read("site/theme.txt.erb"))
+INDEX_TEMPLATE = ERB.new(File.read("site/index.txt.erb"))
 
-EX_CONF = FileList['examples/*.conf']
-EX_HTML = EX_SRCS.map { |f| f.sub(/\.txt/, '.html') }
-
-file 'examples/README.txt' => %w[README.txt Rakefile] do |f|
-  text = File.read('README.txt')
-  text.gsub! /link:\.\/examples/, 'link:.'
-  text.gsub! /link:\.\/src/, 'link:../src'
-  text.gsub! /link:HACKING/, 'link:../HACKING'
-  File.open(f.name, 'wb') { |io| io.write(text) }
+file 'site/src' do |f|
+  doing :ln, f.name
+  ln_s '../src', f.name, :force => true
 end
+task 'site' => 'site/src'
+CLOBBER.include 'site/src'
 
-EX_ART_SRCS.each do |srcfile|
-  THEMES.each do |theme|
-    prereqs = FileList[
-      srcfile,
-      'examples/xhtml11-article.conf',
-      'examples/asciidoc.conf',
-      "src/#{theme}.css"
-    ]
-    destfile = srcfile.
-      sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
-    file destfile => prereqs do
-      asciidoc srcfile, destfile, :theme => theme,
-        :stylesdir => '../src',
-        :iconsdir => '../images/icons'
+
+file 'site/stylesheets' do |f|
+  doing :ln, f.name
+  ln_s '../stylesheets', f.name, :force => true
+end
+task 'site' => 'site/stylesheets'
+CLOBBER.include 'site/stylesheets'
+
+
+Theme.each do |theme|
+
+  prereqs = [
+    "src/#{theme.name}.txt",
+    "site/src",
+    "site/theme.txt.erb"
+  ]
+  file "site/#{theme.name}.txt" => prereqs do |f|
+    doing :erb, f.name
+    File.open("#{f.name}+", 'wb') do |io|
+      io.write(THEME_TEMPLATE.result(binding))
     end
-    CLEAN.include destfile
-    task "examples:#{theme}" => destfile
+    mv "#{f.name}+", f.name
   end
+  task 'site:text' => "site/#{theme.name}.txt"
+  CLEAN.include "site/#{theme.name}.txt+"
+  CLOBBER.include "site/#{theme.name}.txt"
+
+  prereqs = [
+    "site/#{theme.name}.txt",
+    'site/xhtml11-article.conf',
+    'site/asciidoc.conf',
+    "stylesheets/#{theme.name}.css",
+    "src/#{theme.name}.css",
+    "site/src",
+    "site/images/icons"
+  ]
+  file "site/#{theme.name}.html" => prereqs do |f|
+    asciidoc f.prerequisites.first, f.name,
+      '-f', 'site/theme.conf',
+      :theme => theme.name,
+      :stylesdir => 'src', # XXX: switch to stylesheets to use full ver
+      :iconsdir  => 'images/icons'
+  end
+  task 'site:indexes' => "site/#{theme.name}.html"
+  CLOBBER.include "site/#{theme.name}.html"
+
+
+  manprereqs = [
+    "site/asciidoc.1.txt",
+    "site/xhtml11-manpage.conf"
+  ] + prereqs
+  file "site/#{theme.name}-manpage.html" => manprereqs do |f|
+    asciidoc manprereqs.first, f.name,
+      '-d', 'manpage',
+      :theme => theme.name,
+      :stylesdir => 'src'
+  end
+  task "site:manpages" => "site/#{theme.name}-manpage.html"
+  CLOBBER.include "site/#{theme.name}-manpage.html"
+
+
+  prereqs = [
+    "site/userguide.txt",
+    'site/xhtml11-article.conf',
+    'site/asciidoc.conf',
+    "src/#{theme.name}.css"
+  ]
+  file "site/#{theme.name}-format.html" => prereqs do |f|
+    asciidoc prereqs.first, f.name,
+      :theme => theme.name,
+      :stylesdir => 'src',
+      :iconsdir  => 'images/icons'
+  end
+  task "site:format" => "site/#{theme.name}-format.html"
+  CLOBBER.include "site/#{theme.name}-format.html"
+
 end
 
-EX_MAN_SRCS.each do |srcfile|
-  THEMES.each do |theme|
-    prereqs = FileList[
-      srcfile,
-      'examples/xhtml11-manpage.conf',
-      'examples/asciidoc.conf',
-      "src/#{theme}.css",
-      "src/#{theme}-manpage.css"
-    ]
-    destfile = srcfile.
-      sub(/examples\/(.*)\.txt/, "examples/#{theme}-\\1.html")
-    file destfile => prereqs do
-      asciidoc srcfile, destfile, '-d', 'manpage',
-        :theme => theme,
-        :stylesdir => '../src'
-    end
-    CLEAN.include destfile
-    task "examples:#{theme}" => destfile
-  end
-end
+task 'site' => %w[site:text site:indexes site:manpages site:format]
 
-THEMES.each do |theme|
-  desc "Build #{theme} examples"
-  task "examples:#{theme}"
-  task 'examples' => "examples:#{theme}"
+file "site/index.txt" => FileList['site/index.txt.erb','src/*.txt'] do |f|
+  doing :erb, f.name
+  File.open("#{f.name}+", 'wb') do |io|
+    io.write(INDEX_TEMPLATE.result(binding))
+  end
+  mv "#{f.name}+", f.name
 end
+task 'site:text' => "site/index.txt"
+CLEAN.include "site/index.txt+"
+CLOBBER.include "site/index.txt"
+
+file 'site/index.html' => %w[site/index.txt site/stylesheets site/xhtml11-article.conf] do |f|
+  asciidoc 'site/index.txt', f.name,
+    :stylesdir => 'stylesheets',
+    :theme => 'bare'
+end
+CLOBBER.include 'site/index.html'
+task 'site:indexes' => 'site/index.html'
+
+file 'site/hacking.txt' => %w[HACKING] do |f|
+  ln 'HACKING', f.name, :force => true
+end
+CLEAN.include 'site/hacking.txt'
+
+file 'site/hacking.html' => %w[site/hacking.txt site/stylesheets] do |f|
+  asciidoc 'site/hacking.txt', f.name,
+    :stylesdir => 'stylesheets',
+    :theme => 'bare'
+end
+CLOBBER.include 'site/hacking.html'
+task 'site' => 'site/hacking.html'
+
 
 # ---------------------------------------------------------------------------
 # Project Documentation
 # ---------------------------------------------------------------------------
 
-directory 'images'
+directory 'site/images'
 
-file 'images/icons' => %w[images] do |f|
+file 'site/images/icons' => %w[site/images] do |f|
   rm_rf f.name
   asciidoc_config =
     %w[/etc/asciidoc /usr/local/etc/asciidoc /opt/local/etc/asciidoc].
       detect { |dir| File.directory?(dir) }
   if asciidoc_config
-    mkdir_p 'images'
-    doing 'ICONS', "images/icons (from #{asciidoc_config}/images/icons)"
+    mkdir_p 'site/images'
+    doing 'ICONS', "site/images/icons (from #{asciidoc_config}/images/icons)"
     cp_r "#{asciidoc_config}/images/icons", f.name, :preserve => true
   else
     STDERR.puts "warn: cannot copy asciidoc icons" +
@@ -143,50 +200,33 @@ file 'images/icons' => %w[images] do |f|
       mkdir_p f.name
   end
 end
-task 'doc' => 'images/icons'
-CLOBBER.include 'images/icons'
-
-file 'README.html' => %w[README.txt stylesheets examples] do |f|
-  asciidoc 'README.txt', f.name,
-    :stylesdir => 'stylesheets',
-    :theme => 'bare',
-    :linkcss => '!'
-end
-task 'doc' => 'README.html'
-CLOBBER.include 'README.html'
-
-file 'HACKING.html' => %w[HACKING stylesheets examples] do |f|
-  asciidoc 'HACKING', f.name,
-    :stylesdir => 'stylesheets',
-    :theme => 'bare',
-    :linkcss => '!'
-end
-task 'doc' => 'HACKING.html'
-CLOBBER.include 'HACKING.html'
+task 'site' => 'site/images/icons'
+CLOBBER.include 'site/images/icons'
 
 # ---------------------------------------------------------------------------
 # Shipping it out
 # ---------------------------------------------------------------------------
 
 # Push website up to tomayko.com
-task 'publish' => %w[doc] do |t|
+task 'publish' => %w[site] do |t|
   doing :pub, "tomayko.com"
   sh <<-EOF
-    rsync -av -f'- .git' -f'- *.sw?' -f'- /dist' --delete --delete-excluded \
-          ./ tomayko.com:/src/adoc-themes &&
-    ssh tomayko.com 'cd /src/adoc-themes && ln -sf README.html index.html'
+    rsync -aL \
+          --delete \
+          --delete-excluded \
+          site/ tomayko.com:/src/adoc-themes &&
+    ssh tomayko.com 'cd /src/adoc-themes && ln -sf bare-index.html index.html'
   EOF
 end
 
-TARNAME = "adoc-themes-0.#{VERS}"
+TARNAME = "adoc-themes-#{VERS}"
 
 # Build tarball under dist.
-file "dist/#{TARNAME}.tar.gz" => %w[stylesheets examples doc] do |f|
+file "dist/#{TARNAME}.tar.gz" => %w[stylesheets site] do |f|
   content = FileList['src/*.css','stylesheets/*.css']
-  content.include 'examples/*.{conf,html,txt}'
-  content.include 'images/icons/***'
-  content.include 'README.txt', 'HACKING', 'Rakefile', 'asciidoc.conf',
-    'xhtml11-article.conf'
+  content.include 'site/*.{conf,html,txt}'
+  content.include 'site/images/icons/***'
+  content.include 'README.txt', 'HACKING', 'Rakefile'
   doing :tar, f.name
   rm_rf "#{TARNAME}"
   mkdir "#{TARNAME}"
@@ -208,8 +248,7 @@ task 'dist' => "dist/#{TARNAME}.tar.gz"
 # Push tarball up to dist site.
 task 'release' => %w[dist] do |t|
   sh <<-EOF
-    rsync -av dist/ tomayko.com:/dist/adoc-themes &&
-    ssh tomayko.com 'cd /src/adoc-themes && ln -sf README.html index.html'
+    rsync -av dist/ tomayko.com:/dist/adoc-themes
   EOF
 end
 

@@ -1,0 +1,17 @@
+
+                               AsciiDoc Themes
+                   < http://tomayko.com/src/adoc-themes/ >
+
+AsciiDoc is a (mostly humane) text document format for writing short
+documents, articles, books and man pages. Its toolchain is capable of
+producing HTML4, XHTML, DocBook, man, and LaTeX. Many projects use AsciiDoc,
+including the Git content tracker.
+
+AsciiDoc generates basically good semantic markup, is styled with external
+CSS, and includes support for themeing. The default theme included in
+AsciiDoc is functional but is somewhat lacking in typographic
+consistencies; it is also quite blue.
+
+This package includes a variety of additional themes and a framework for
+assembling them. See the HACKING file included with this package for more
+information.

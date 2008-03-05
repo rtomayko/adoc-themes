@@ -1,0 +1,10 @@
+Bare
+====
+Ryan Tomayko <r@tomayko.com>
+2008-03-04
+
+The "bare" theme is meant as a starting point for other themes.  It includes a
+basic level of structural and typographic styling but tries to remain
+otherwise vanilla in its visual appearance. The manpage styles are based on the
+default theme included with the http://bruji.com/bwana/[Bwana] manpage reader
+for MacOS X.

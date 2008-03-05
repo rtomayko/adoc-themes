@@ -81,8 +81,8 @@ Soon, there will be tarballs with just the finished theme CSS for easy
 installation and use with AsciiDoc. But not yet.
 
 A clean source tree has all the theme CSS under `src` and the example asciidoc
-text files under `examples`. Running `rake examples` will generate an `.html`
-file for each theme/example combination.
+text files under `site`. Running `rake site` generates the sample asciidoc
+output for each theme.
 
 If you want to add a theme, take a look at one of the existing theme sources
 under `src`, like `handbookish.css`, and then copy it to a new file under `src`
