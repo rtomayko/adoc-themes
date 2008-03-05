@@ -1,0 +1,34 @@
+@import url(bare.css);
+
+body {
+	font-family:georgia,'bitstream vera sans serif',palatino,serif;
+	font-size:93.75%;   /* 15px */
+	line-height:1.5;    /* 20px */
+	max-width:52.666em;
+}
+
+h1,h2,h3,h4,h5 {
+	font-family:georgia,'bitstream vera sans serif',palatino,serif;
+}
+
+h1 {
+	font-family:georgia,'bitstream vera sans serif',palatino,serif;
+	font-size:40px;
+}
+
+h2 {
+	font-size:28.3px;
+	line-height:1.413;
+}
+
+h3 {
+	font-size:20px;
+	line-height:1;
+}
+
+h4 {
+	font-size:15px;
+	line-height:1.5;
+}
+
+/* vim: set ft=css ts=4 sw=4 noexpandtab: */

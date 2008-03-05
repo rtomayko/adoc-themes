@@ -1,5 +1,12 @@
 @import url(bare.css);
 
+/* ---------------------------------------------------------------------------
+   FreeBSD AsciiDoc Theme
+   Ryan Tomayko <r@tomayko.com>
+
+   Based on The FreeBSD Handbook and various other FreeBSD documenration.
+--------------------------------------------------------------------------- */
+
 body {
   font-family:verdana,helvetica,arial,sans-serif;
   font-size:100%;

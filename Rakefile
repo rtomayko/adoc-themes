@@ -157,6 +157,7 @@ task 'site:text' => "site/index.txt"
 CLEAN.include "site/index.txt+"
 CLOBBER.include "site/index.txt"
 
+
 file 'site/index.html' => %w[site/index.txt site/stylesheets site/xhtml11-article.conf] do |f|
   asciidoc 'site/index.txt', f.name,
     :stylesdir => 'stylesheets',
@@ -170,6 +171,7 @@ file 'site/hacking.txt' => %w[HACKING] do |f|
 end
 CLEAN.include 'site/hacking.txt'
 
+
 file 'site/hacking.html' => %w[site/hacking.txt site/stylesheets] do |f|
   asciidoc 'site/hacking.txt', f.name,
     :stylesdir => 'stylesheets',
@@ -178,10 +180,6 @@ end
 CLOBBER.include 'site/hacking.html'
 task 'site' => 'site/hacking.html'
 
-
-# ---------------------------------------------------------------------------
-# Project Documentation
-# ---------------------------------------------------------------------------
 
 directory 'site/images'
 
@@ -214,8 +212,7 @@ task 'publish' => %w[site] do |t|
     rsync -aL \
           --delete \
           --delete-excluded \
-          site/ tomayko.com:/src/adoc-themes &&
-    ssh tomayko.com 'cd /src/adoc-themes && ln -sf bare-index.html index.html'
+          site/ tomayko.com:/src/adoc-themes
   EOF
 end
 

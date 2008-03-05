@@ -16,11 +16,10 @@ class Theme
     @name = File.basename(filename).sub(/\.txt$/, '')
     @attributes = {}
     @author_name, @author_email = nil
+    @index = nil
     @date_of_inclusion = nil
-    @index = @@all.length
     load_info!
     yield self if block_given?
-    @@all << self
   end
 
   def author
@@ -64,7 +63,13 @@ private
 
     def load!
       return unless @@all.empty?
-      FileList['src/*.txt'].each { |filename| new(filename) }
+      @@all = FileList['src/*.txt'].
+        map { |filename| new(filename) }.
+        sort { |a,b| a.date_of_inclusion <=> b.date_of_inclusion }.
+        reverse
+      @@all.each_with_index do |theme,index|
+        theme.instance_variable_set(:@index, index)
+      end
     end
 
   end

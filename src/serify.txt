@@ -1,0 +1,7 @@
+Serify
+======
+Ryan Tomayko <r@tomayko.com>
+2008-03-06
+
+Very similar to the link:bare.html[bare theme] but uses serif faces instead of
+sans-serif. This theme's manpage style is identical to the bare theme.
