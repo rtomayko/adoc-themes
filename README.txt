@@ -23,25 +23,11 @@ stages of development. There's not many themes yet and not all themes style the
 gambit of supported AsciiDoc markup. Also, I have not tested anything in any
 version of Internet Explorer, yet.
 
-Without further ado, let's get to the themes ...
-
-`bare.css`
-----------
-
-The "bare" theme is meant as a starting point for other themes.  It includes a
-basic level of structural and typographic styling but tries to remain otherwise
-vanilla in its visual appeal. The manpage styles are based on the default theme
-included with the http://bruji.com/bwana/[Bwana] manpage reader for MacOS X.
-
-link:./examples/bare-README.html[This Page] |
-link:./examples/bare-asciidoc.1.html[`asciidoc(1)`] |
-link:./examples/bare-userguide.html[User Guide] |
-link:./src/bare.css[bare.css] |
-link:./src/bare-manpage.css[bare-manpage.css]
-
+Themes
+------
 
 Handbookish
------------
+~~~~~~~~~~~
 
 Inspired by http://freebsd.org/doc/en/books/handbook/[The FreeBSD Handbook],
 one of The FreeBSD Documentation Project's many works of art, this theme is
@@ -51,10 +37,25 @@ bold headings. FreeBSD's http://tinyurl.com/3afcwv[`sh(1)`] HTML manpage
 stylings.
 
 link:./examples/handbookish-README.html[This Page] |
-link:./examples/handbookish-asciidoc.1.html[`asciidoc(1)`] |
-link:./examples/handbookish-userguide.html[User Guide] |
+link:./examples/handbookish-userguide.html[Formatting] |
+link:./examples/handbookish-asciidoc.1.html[Manpage] |
 link:./src/handbookish.css[handbookish.css] |
 link:./src/handbookish-manpage.css[handbookish-manpage.css]
+
+`bare.css`
+~~~~~~~~~~
+
+The "bare" theme is meant as a starting point for other themes.  It includes a
+basic level of structural and typographic styling but tries to remain otherwise
+vanilla in its visual appeal. The manpage styles are based on the default theme
+included with the http://bruji.com/bwana/[Bwana] manpage reader for MacOS X.
+
+link:./examples/bare-README.html[This Page] |
+link:./examples/bare-userguide.html[Formatting] |
+link:./examples/bare-asciidoc.1.html[Manpage] |
+link:./src/bare.css[bare.css] |
+link:./src/bare-manpage.css[bare-manpage.css]
+
 
 See Also
 --------

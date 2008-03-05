@@ -7,9 +7,7 @@ shortly.
 
 The project is kept in Git:
 
------------------------------------------------------
-$ git clone git://github.com/rtomayko/adoc-themes.git
------------------------------------------------------
+  $ git clone git://github.com/rtomayko/adoc-themes.git
 
 There's a http://github.com/rtomayko/adoc-themes/tree/master[Project Page] on
 GitHub. You can pull a tarball of the master branch from there if you're not
@@ -70,18 +68,14 @@ We build standalone "full" versions of each theme `.css` file under the
 `stylesheets` directory. If you just want stylesheets for use with
 `asciidoc(1)`, you should be able to simply run:
 
-------------------
-$ rake stylesheets
-------------------
+  $ rake stylesheets
 
 You'll have your asciidoc-ready stylesheets under `stylesheets`. Using them
 should be as simple as:
 
-----------------------------------------------------------
-$ asciidoc -a stylesdir=/path/to/adoc-themes/stylesheets \
-           -a theme=THEMENAME \
-           your-asciidoc-source.txt
-----------------------------------------------------------
+  $ asciidoc -a stylesdir=/path/to/adoc-themes/stylesheets \
+             -a theme=THEMENAME \
+              your-asciidoc-source.txt
 
 Soon, there will be tarballs with just the finished theme CSS for easy
 installation and use with AsciiDoc. But not yet.
